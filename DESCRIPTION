@@ -1,0 +1,15 @@
+Package: TimeVarying
+Title: What the Package Does (One Line, Title Case)
+Version: 0.9
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
+License: What license it uses
+Imports: Rcpp (>= 1.0.2), RcppArmadillo
+LinkingTo: Rcpp, RcppArmadillo
+Encoding: UTF-8
+LazyData: true
