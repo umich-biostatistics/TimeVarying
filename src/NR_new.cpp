@@ -4,29 +4,29 @@
 
 using namespace Rcpp;
 // [[Rcpp::depends(RcppArmadillo)]]
-using namespace arma;
+//using namespace arma;
 
 
 
 // [[Rcpp::export]]
-double dloglik_likelihood_stratify(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta)
+double dloglik_likelihood_stratify(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta)
 {
 int n     = delta.n_rows;
 int N     = z.n_rows;
 
 double partial_likelihood = 0;
-rowvec S0  = zeros<rowvec>(n);
-colvec unique_facility = unique(facility);
+arma::rowvec S0  = arma::zeros<arma::rowvec>(n);
+arma::colvec unique_facility = unique(facility);
 int number_facility    = unique_facility.n_elem;
 for(int i = 0; i < number_facility; i++){
-  uvec loc   = find(facility == i+1);
-  uvec loc1  = find(facility == i+1 && delta == 1);
-  mat z_temp = z.rows(loc);
+  arma::uvec loc   = find(facility == i+1);
+  arma::uvec loc1  = find(facility == i+1 && delta == 1);
+  arma::mat z_temp = z.rows(loc);
   int size_temp     = z_temp.n_rows;
-  mat b_spline_temp = b_spline.rows(loc);
+  arma::mat b_spline_temp = b_spline.rows(loc);
   int size          = loc1.n_elem;
   int q             = 0;
-  mat aa;
+  arma::mat aa;
   for(int j = 0; j < size_temp; j++)
   {
     aa         = exp(z_temp.rows(j,size_temp-1)*theta*b_spline_temp.row(j).t());
@@ -48,28 +48,28 @@ return partial_likelihood;
 
 
 // [[Rcpp::export]]
-List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta,int number_facility){
+List ddloglik(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta,int number_facility){
   int n          = delta.n_rows;
   int p          = theta.n_rows;
-  uvec delta_1   = find(delta == 1);              // record the events
-  mat schoenfeld = zeros<mat>(n,p);               
+  arma::uvec delta_1   = find(delta == 1);              // record the events
+  arma::mat schoenfeld = arma::zeros<arma::mat>(n,p);               
   //double partial_likelihood = 0; 
-  mat GVG        = zeros<mat>(p*knot,p*knot);     
-  rowvec GR_test = zeros<rowvec>(p*knot);
-  rowvec GR      = zeros<rowvec>(p*knot);
-  rowvec S0      = zeros<rowvec>(n);
-  mat S1         = zeros<mat>(n,p);
-  mat S2         = zeros<mat>(p,p);
+  arma::mat GVG        = arma::zeros<arma::mat>(p*knot,p*knot);     
+  arma::rowvec GR_test = arma::zeros<arma::rowvec>(p*knot);
+  arma::rowvec GR      = arma::zeros<arma::rowvec>(p*knot);
+  arma::rowvec S0      = arma::zeros<arma::rowvec>(n);
+  arma::mat S1         = arma::zeros<arma::mat>(n,p);
+  arma::mat S2         = arma::zeros<arma::mat>(p,p);
   for(int i = 0; i < number_facility; i++){
-    uvec loc     = find(facility==i+1);
-    uvec loc1    = find(facility==i+1&&delta==1);
-    mat z_temp   = z.rows(loc);
+    arma::uvec loc     = find(facility==i+1);
+    arma::uvec loc1    = find(facility==i+1&&delta==1);
+    arma::mat z_temp   = z.rows(loc);
     int size_temp= z_temp.n_rows;
-    mat b_spline_temp = b_spline.rows(loc);
+    arma::mat b_spline_temp = b_spline.rows(loc);
     int size     = loc1.n_elem;
     int q        = 0;
-    mat aa;
-    mat bb;
+    arma::mat aa;
+    arma::mat bb;
     for(int j = 0; j < size_temp; j++)
     { bb         = z_temp.rows(j,size_temp-1);
       aa       = exp(bb * theta * b_spline_temp.row(j).t());
@@ -86,16 +86,16 @@ List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &
     }
   }
 
-  schoenfeld     = repmat(delta,1,p)%(z-S1/repmat(S0.t(),1,p));
+  schoenfeld     = arma::repmat(delta,1,p)%(z-S1/arma::repmat(S0.t(),1,p));
   int number_1   = delta_1.n_elem;
-  mat gr_test    = zeros<mat>(p*knot,number_1);
+  arma::mat gr_test    = arma::zeros<arma::mat>(p*knot,number_1);
   for(int i = 0; i < number_1; i++){
-    gr_test.col(i)     = kron(schoenfeld.row(delta_1(i)),b_spline.row(delta_1(i))).t();
+    gr_test.col(i)     = arma::kron(schoenfeld.row(delta_1(i)),b_spline.row(delta_1(i))).t();
     // partial_likelihood = partial_likelihood+
     //   (accu(z.row(delta_1(i))*theta*(b_spline.row(delta_1(i)).t()))-log(S0(delta_1(i))));
   } 
   GR_test              = sum(gr_test,1).t();
-  mat dist             = solve(GVG,GR_test.t());
+  arma::mat dist             = arma::solve(GVG,GR_test.t());
   dist.reshape(knot,p);
   dist=dist.t();
   List result;
@@ -110,24 +110,24 @@ List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &
 
 
 // [[Rcpp::export]]
-double dloglik_likelihood_gradient(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta)
+double dloglik_likelihood_gradient(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta)
 {
   int N     = z.n_rows;
   int n     = delta.n_rows;
   double partial_likelihood = 0;
-  rowvec S0 = zeros<rowvec>(n);
-  colvec unique_facility = unique(facility);
+  arma::rowvec S0 = arma::zeros<arma::rowvec>(n);
+  arma::colvec unique_facility = unique(facility);
   int number_facility = unique_facility.n_elem;
 
 for(int i = 0; i < number_facility; i++){
-  uvec loc   = find(facility==i+1);
-  uvec loc1  = find(facility==i+1 && delta==1);
-  mat z_temp = z.rows(loc);
+  arma::uvec loc   = find(facility==i+1);
+  arma::uvec loc1  = find(facility==i+1 && delta==1);
+  arma::mat z_temp = z.rows(loc);
   int size_temp     = z_temp.n_rows;
-  mat b_spline_temp = b_spline.rows(loc);
+  arma::mat b_spline_temp = b_spline.rows(loc);
   int size          = loc1.n_elem;
   int q             = 0;
-  mat aa;
+  arma::mat aa;
   for(int j = 0; j < size_temp; j++)
   {
     aa       = exp(z_temp.rows(j,size_temp-1)*theta*b_spline_temp.row(j).t());
@@ -147,9 +147,9 @@ return partial_likelihood;
 
 // different version for NR
 // [[Rcpp::export]]
-List NRloop(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta, int M_stop, int number_facility, double rate, double tol){
+List NRloop(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta, int M_stop, int number_facility, double rate, double tol){
 	
-	colvec likelihood_NR_all(M_stop+1);
+	arma::colvec likelihood_NR_all(M_stop+1);
 	likelihood_NR_all(0) = dloglik_likelihood_stratify(knot, facility, delta, z, b_spline, theta);
 	
 
@@ -158,11 +158,11 @@ List NRloop(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &th
     while(i <= M_stop)
 	{
 		temp = ddloglik(knot,facility,delta,z,b_spline,theta,number_facility);
-		mat dist = temp["dist"];
-		mat GVG = temp["GVG"];
-		rowvec GR_test = temp["GR_test"];
+    arma::mat dist = temp["dist"];
+    arma::mat GVG = temp["GVG"];
+    arma::rowvec GR_test = temp["GR_test"];
 		double gamma = 1;
-		mat theta_temp = theta + gamma * dist;
+		arma::mat theta_temp = theta + gamma * dist;
 
 		double likelihood_stratify = dloglik_likelihood_stratify(knot,facility, delta, z, b_spline, theta_temp);
 
@@ -179,9 +179,9 @@ List NRloop(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &th
 		if(i >= 2){
 			double llk_diff  = likelihood_NR_all(i) - likelihood_NR_all(i-1);
 			double llk_diff2 = likelihood_NR_all(i) -likelihood_NR_all(1);
-			mat GVG_Q, GVG_R;
+			arma::mat GVG_Q, GVG_R;
 			qr(GVG_Q,GVG_R,GVG);
-			mat incrementm = GR_test * (solve(GVG_R,(GVG_Q.t())*GR_test.t()));
+			arma::mat incrementm = GR_test * (solve(GVG_R,(GVG_Q.t())*GR_test.t()));
 			double increment = incrementm(0,0);
 			if(abs(llk_diff/llk_diff2) < tol || increment < tol){
 				break;

@@ -4,7 +4,7 @@
 
 using namespace Rcpp;
 // [[Rcpp::depends(RcppArmadillo)]]
-using namespace arma;
+//using namespace arma;
 
 // [[Rcpp::export]]
 int sign_num(double x){
@@ -15,27 +15,27 @@ int sign_num(double x){
 
 
 // [[Rcpp::export]]
-List ddloglik_stratify(int knot,colvec &facility,mat &z,colvec &delta,mat &b_spline,mat &theta,int number_facility = 1){
+List ddloglik_stratify(int knot,arma::colvec &facility,arma::mat &z,arma::colvec &delta,arma::mat &b_spline,arma::mat &theta,int number_facility = 1){
   int n       = delta.n_rows;
   int p       = theta.n_rows;
-  uvec delta_1= find(delta==1);
-  mat L       = zeros<mat>(n,p);
-  rowvec L1   = zeros<rowvec>(p*knot);
-  mat L2      = zeros<mat>(p*knot,knot);
+  arma::uvec delta_1= find(delta==1);
+  arma::mat L       = zeros<arma::mat>(n,p);
+  arma::rowvec L1   = zeros<arma::rowvec>(p*knot);
+  arma::mat L2      = zeros<arma::mat>(p*knot,knot);
   double partial_likelihood = 0;
-  rowvec S0   = zeros<rowvec>(n);
-  rowvec S1;
-  rowvec S2;
+  arma::rowvec S0   = zeros<arma::rowvec>(n);
+  arma::rowvec S1;
+  arma::rowvec S2;
   for(int i = 0; i < number_facility ; i++){
-    uvec loc       = find(facility == i+1);
-    uvec loc1      = find(facility == i+1 && delta == 1);
-    mat z_temp     = z.rows(loc);
+    arma::uvec loc       = find(facility == i+1);
+    arma::uvec loc1      = find(facility == i+1 && delta == 1);
+    arma::mat z_temp     = z.rows(loc);
     int size_temp  = z_temp.n_rows;
-    mat b_spline_temp = b_spline.rows(loc);
+    arma::mat b_spline_temp = b_spline.rows(loc);
     int size       = loc1.n_elem;
     int q          = 0;
-    field<mat> a(size_temp);
-    field<mat> b(size_temp);
+    field<arma::mat> a(size_temp);
+    field<arma::mat> b(size_temp);
     for(int j=0; j < size_temp; j++)
     { b(j)         = z_temp.rows(j,size_temp-1);
       a(j)         = exp(b(j)*theta*b_spline_temp.row(j).t());
@@ -62,30 +62,30 @@ List ddloglik_stratify(int knot,colvec &facility,mat &z,colvec &delta,mat &b_spl
 }
 
 // [[Rcpp::export]]
-List GDboost_stratify(int knot,double rate,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat theta){
+List GDboost_stratify(int knot,double rate,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat theta){
   int n                   = delta.n_rows;
   int p                   = z.n_cols;
-  colvec unique_facility  = unique(facility);
+  arma::colvec unique_facility  = unique(facility);
   int number_facility     = unique_facility.n_elem;
   List result;
-  rowvec dist             = zeros<rowvec>(knot);
-  mat beta_tuta           = zeros<mat>(p,knot);
-  mat beta_tuta2          = zeros<mat>(p,knot);
+  arma::rowvec dist             = zeros<arma::rowvec>(knot);
+  arma::mat beta_tuta           = zeros<arma::mat>(p,knot);
+  arma::mat beta_tuta2          = zeros<arma::mat>(p,knot);
   beta_tuta2.fill(1/sqrt(knot));
-  mat beta_tuta_normalize = zeros<mat>(p,knot);
-  mat beta_temp2          = zeros<mat>(n,p);
-  rowvec GD               = zeros<rowvec>(p);
-  rowvec GD1              = zeros<rowvec>(p);
-  rowvec GD2              = zeros<rowvec>(p);
-  rowvec test             = zeros<rowvec>(p);
-  rowvec rate_check       = zeros<rowvec>(p);
+  arma::mat beta_tuta_normalize = zeros<arma::mat>(p,knot);
+  arma::mat beta_temp2          = zeros<arma::mat>(n,p);
+  arma::rowvec GD               = zeros<arma::rowvec>(p);
+  arma::rowvec GD1              = zeros<arma::rowvec>(p);
+  arma::rowvec GD2              = zeros<arma::rowvec>(p);
+  arma::rowvec test             = zeros<arma::rowvec>(p);
+  arma::rowvec rate_check       = zeros<arma::rowvec>(p);
   result      = ddloglik_stratify(knot,facility,z,delta,b_spline,theta,number_facility);
-  mat diff    = result["L"];
-  rowvec L1   = result["L1"];
-  mat L2      = result["L2"];
+  arma::mat diff    = result["L"];
+  arma::rowvec L1   = result["L1"];
+  arma::mat L2      = result["L2"];
   for(int i = 0; i < p; i++){
-    rowvec gd = zeros<rowvec>(2);
-    dist      = solve(L2.rows(i*knot,(i+1)*knot-1),L1.cols(i*knot,(i+1)*knot-1).t()).t();
+    arma::rowvec gd = zeros<arma::rowvec>(2);
+    dist      = arma::solve(L2.rows(i*knot,(i+1)*knot-1),L1.cols(i*knot,(i+1)*knot-1).t()).t();
     rate_check(i)    = (abs(dist)).max();
     beta_tuta.row(i) = beta_tuta.row(i) - dist;
     beta_tuta_normalize.row(i) = beta_tuta.row(i)/sqrt(accu(beta_tuta.row(i) % beta_tuta.row(i)));
@@ -100,7 +100,7 @@ List GDboost_stratify(int knot,double rate,colvec &facility,colvec &delta,mat &z
     test(i)          = 1-gd.index_max();
   }
   int j_star         = GD.index_max();
-  rowvec temp;
+  arma::rowvec temp;
   if(GD1(j_star) >= GD2(j_star)){
     temp = rate * beta_tuta_normalize.row(j_star);
   }
@@ -127,33 +127,33 @@ List GDboost_stratify(int knot,double rate,colvec &facility,colvec &delta,mat &z
 
 
 // [[Rcpp::export]]
-List GDboost_stratify_no_GD2(int knot,double rate,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat theta){
+List GDboost_stratify_no_GD2(int knot,double rate,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat theta){
   int n   = delta.n_rows;
   int p   = z.n_cols;
-  colvec unique_facility = unique(facility);
+  arma::colvec unique_facility = unique(facility);
   int number_facility    = unique_facility.n_elem;
   List result;
-  rowvec dist   = zeros<rowvec>(knot);
-  mat beta_tuta = zeros<mat>(p,knot);
-  mat beta_tuta_normalize = zeros<mat>(p,knot);
-  mat beta_temp2= zeros<mat>(n,p);
-  rowvec GD     = zeros<rowvec>(p);
-  rowvec test   = zeros<rowvec>(p);
-  rowvec rate_check = zeros<rowvec>(p);
+  arma::rowvec dist   = zeros<arma::rowvec>(knot);
+  arma::mat beta_tuta = zeros<arma::mat>(p,knot);
+  arma::mat beta_tuta_normalize = zeros<arma::mat>(p,knot);
+  arma::mat beta_temp2= zeros<arma::mat>(n,p);
+  arma::rowvec GD     = zeros<arma::rowvec>(p);
+  arma::rowvec test   = zeros<arma::rowvec>(p);
+  arma::rowvec rate_check = zeros<arma::rowvec>(p);
   result            = ddloglik_stratify(knot,facility,z,delta,b_spline,theta,number_facility);
-  mat diff          = result["L"];
-  rowvec L1         = result["L1"];
-  mat L2            = result["L2"];
+  arma::mat diff          = result["L"];
+  arma::rowvec L1         = result["L1"];
+  arma::mat L2            = result["L2"];
   for(int i = 0; i < p; i++){
-    rowvec gd       = zeros<rowvec>(2);
-    dist            = solve(L2.rows(i * knot,(i+1) * knot-1),L1.cols(i * knot,(i+1)*knot-1).t()).t();
+    arma::rowvec gd       = zeros<arma::rowvec>(2);
+    dist            = arma::solve(L2.rows(i * knot,(i+1) * knot-1),L1.cols(i * knot,(i+1)*knot-1).t()).t();
     rate_check(i)   = (abs(dist)).max();
     beta_tuta.row(i)= beta_tuta.row(i)-dist;
     beta_tuta_normalize.row(i) = beta_tuta.row(i)/sqrt(accu(beta_tuta.row(i)%beta_tuta.row(i)));
     GD(i)           = accu(diff.col(i)%(b_spline*(beta_tuta_normalize.row(i).t())));
   }
   int j_star        = GD.index_max();
-  rowvec temp;
+  arma::rowvec temp;
   temp              = rate*beta_tuta_normalize.row(j_star);
   theta.row(j_star) = theta.row(j_star) + temp;
   double partial_likelihood = result["partial_likelihood"];
@@ -171,21 +171,21 @@ List GDboost_stratify_no_GD2(int knot,double rate,colvec &facility,colvec &delta
 
 // This function gives statrified likelihood
 // [[Rcpp::export]]
-double dloglik_likelihood_stratify(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta)
+double dloglik_likelihood_stratify(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta)
 {int n     = delta.n_rows;
 double partial_likelihood = 0;
-rowvec S0  = zeros<rowvec>(n);
-colvec unique_facility = unique(facility);
+arma::rowvec S0  = zeros<arma::rowvec>(n);
+arma::colvec unique_facility = unique(facility);
 int number_facility    = unique_facility.n_elem;
 for(int i = 0; i < number_facility; i++){
-  uvec loc   = find(facility == i+1);
-  uvec loc1  = find(facility == i+1 && delta == 1);
-  mat z_temp = z.rows(loc);
+  arma::uvec loc   = find(facility == i+1);
+  arma::uvec loc1  = find(facility == i+1 && delta == 1);
+  arma::mat z_temp = z.rows(loc);
   int size_temp     = z_temp.n_rows;
-  mat b_spline_temp = b_spline.rows(loc);
+  arma::mat b_spline_temp = b_spline.rows(loc);
   int size          = loc1.n_elem;
   int q             = 0;
-  field<mat> a(size_temp);
+  field<arma::mat> a(size_temp);
   for(int j = 0; j < size_temp; j++)
   {
     a(j)       = exp(z_temp.rows(j,size_temp-1)*theta*b_spline_temp.row(j).t());
@@ -200,25 +200,25 @@ return partial_likelihood;
 }
 
 // [[Rcpp::export]]
-List ddloglik_gradient(int knot,colvec &facility,mat &z,colvec &delta,mat &b_spline,mat &theta,int number_facility=1){
+List ddloglik_gradient(int knot,arma::colvec &facility,arma::mat &z,arma::colvec &delta,arma::mat &b_spline,arma::mat &theta,int number_facility=1){
   int n         = delta.n_rows;
   int p         = theta.n_rows;
-  uvec delta_1  = find(delta==1);
-  mat L         = zeros<mat>(n,p);
-  rowvec L1     = zeros<rowvec>(p*knot);
+  arma::uvec delta_1  = find(delta==1);
+  arma::mat L         = zeros<arma::mat>(n,p);
+  arma::rowvec L1     = zeros<arma::rowvec>(p*knot);
   double partial_likelihood = 0;
-  rowvec S0     = zeros<rowvec>(n);
-  rowvec S1;
+  arma::rowvec S0     = zeros<arma::rowvec>(n);
+  arma::rowvec S1;
   for(int i = 0; i < number_facility; i++){
-    uvec loc   = find(facility==i+1);
-    uvec loc1  = find(facility==i+1&&delta==1);
-    mat z_temp = z.rows(loc);
+    arma::uvec loc   = find(facility==i+1);
+    arma::uvec loc1  = find(facility==i+1&&delta==1);
+    arma::mat z_temp = z.rows(loc);
     int size_temp     = z_temp.n_rows;
-    mat b_spline_temp = b_spline.rows(loc);
+    arma::mat b_spline_temp = b_spline.rows(loc);
     int size          = loc1.n_elem;
     int q             = 0;
-    field<mat> a(size_temp);
-    field<mat> b(size_temp);
+    field<arma::mat> a(size_temp);
+    field<arma::mat> b(size_temp);
     for(int j = 0 ; j < size_temp; j++)
     { b(j)    = z_temp.rows(j,size_temp-1);
       a(j)    = exp(b(j) * theta * b_spline_temp.row(j).t());
@@ -241,28 +241,28 @@ List ddloglik_gradient(int knot,colvec &facility,mat &z,colvec &delta,mat &b_spl
 }
 
 // [[Rcpp::export]]
-List GDboost_gradient(int knot,double rate,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat theta){
+List GDboost_gradient(int knot,double rate,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat theta){
   int n = delta.n_rows;
   int p = z.n_cols;
-  colvec unique_facility = unique(facility);
+  arma::colvec unique_facility = unique(facility);
   int number_facility    = unique_facility.n_elem;
   List result;
-  rowvec dist            = zeros<rowvec>(knot);
-  mat beta_tuta          = zeros<mat>(p,knot);
-  mat beta_tuta2         = zeros<mat>(p,knot);
+  arma::rowvec dist            = zeros<arma::rowvec>(knot);
+  arma::mat beta_tuta          = zeros<arma::mat>(p,knot);
+  arma::mat beta_tuta2         = zeros<arma::mat>(p,knot);
   beta_tuta2.fill(1/sqrt(knot));
-  mat beta_tuta_normalize= zeros<mat>(p,knot);
-  mat beta_temp2         = zeros<mat>(n,p);
-  rowvec GD              = zeros<rowvec>(p);
-  rowvec GD1             = zeros<rowvec>(p);
-  rowvec GD2             = zeros<rowvec>(p);
-  rowvec test            = zeros<rowvec>(p);
-  rowvec rate_check      = zeros<rowvec>(p);
+  arma::mat beta_tuta_normalize= zeros<arma::mat>(p,knot);
+  arma::mat beta_temp2         = zeros<arma::mat>(n,p);
+  arma::rowvec GD              = zeros<arma::rowvec>(p);
+  arma::rowvec GD1             = zeros<arma::rowvec>(p);
+  arma::rowvec GD2             = zeros<arma::rowvec>(p);
+  arma::rowvec test            = zeros<arma::rowvec>(p);
+  arma::rowvec rate_check      = zeros<arma::rowvec>(p);
   result = ddloglik_gradient(knot,facility,z,delta,b_spline,theta,number_facility);
-  mat diff    = result["L"];
-  rowvec L1   = result["L1"];
+  arma::mat diff    = result["L"];
+  arma::rowvec L1   = result["L1"];
   for(int i = 0; i < p; i++){
-    rowvec gd = zeros<rowvec>(2);
+    arma::rowvec gd = zeros<arma::rowvec>(2);
     beta_tuta_normalize.row(i) = L1.cols(i*knot,(i+1)*knot-1)/sqrt(accu(L1.cols(i*knot,(i+1)*knot-1)%L1.cols(i*knot,(i+1)*knot-1)));
     GD1(i)    = accu(L1.cols(i*knot,(i+1)*knot-1)%L1.cols(i*knot,(i+1)*knot-1));
     gd(0)     = GD1(i);
@@ -275,7 +275,7 @@ List GDboost_gradient(int knot,double rate,colvec &facility,colvec &delta,mat &z
     test(i)           = 1-gd.index_max();
   }
   int j_star          = GD.index_max();
-  rowvec temp;
+  arma::rowvec temp;
   temp                = rate * beta_tuta_normalize.row(j_star);
   theta.row(j_star)   = theta.row(j_star)-temp;
   double partial_likelihood = result["partial_likelihood"];
@@ -294,23 +294,23 @@ List GDboost_gradient(int knot,double rate,colvec &facility,colvec &delta,mat &z
 }
 
 // [[Rcpp::export]]
-double dloglik_likelihood_gradient(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta)
+double dloglik_likelihood_gradient(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta)
 {
   int n     = delta.n_rows;
   double partial_likelihood = 0;
-  rowvec S0 = zeros<rowvec>(n);
-  colvec unique_facility = unique(facility);
+  arma::rowvec S0 = zeros<arma::rowvec>(n);
+  arma::colvec unique_facility = unique(facility);
   int number_facility = unique_facility.n_elem;
 
 for(int i = 0; i < number_facility; i++){
-  uvec loc   = find(facility==i+1);
-  uvec loc1  = find(facility==i+1 && delta==1);
-  mat z_temp = z.rows(loc);
+  arma::uvec loc   = find(facility==i+1);
+  arma::uvec loc1  = find(facility==i+1 && delta==1);
+  arma::mat z_temp = z.rows(loc);
   int size_temp     = z_temp.n_rows;
-  mat b_spline_temp = b_spline.rows(loc);
+  arma::mat b_spline_temp = b_spline.rows(loc);
   int size          = loc1.n_elem;
   int q             = 0;
-  field<mat> a(size_temp);
+  field<arma::mat> a(size_temp);
   for(int j = 0; j < size_temp; j++)
   {
     a(j)       = exp(z_temp.rows(j,size_temp-1)*theta*b_spline_temp.row(j).t());
@@ -328,25 +328,25 @@ return partial_likelihood;
 
 
 // [[Rcpp::export]]
-double dloglik_likelihood(colvec &par,int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline)
-{ mat theta   = par;
+double dloglik_likelihood(arma::colvec &par,int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline)
+{ arma::mat theta   = par;
   int p       = z.n_cols;
   int n       = delta.n_rows;
   theta.reshape(p,knot);
 
   double partial_likelihood  = 0;
-  rowvec S0                  = zeros<rowvec>(n);
-  colvec unique_facility     = unique(facility);
+  arma::rowvec S0                  = zeros<arma::rowvec>(n);
+  arma::colvec unique_facility     = unique(facility);
   int number_facility        = unique_facility.n_elem;
   for(int i = 0; i < number_facility; i++){
-    uvec loc          = find(facility==i+1);
-    uvec loc1         = find(facility==i+1 && delta==1);
-    mat z_temp        = z.rows(loc);
+    arma::uvec loc          = find(facility==i+1);
+    arma::uvec loc1         = find(facility==i+1 && delta==1);
+    arma::mat z_temp        = z.rows(loc);
     int size_temp     = z_temp.n_rows;
-    mat b_spline_temp = b_spline.rows(loc);
+    arma::mat b_spline_temp = b_spline.rows(loc);
     int size          = loc1.n_elem;
     int q             = 0;
-    field<mat> a(size_temp);
+    field<arma::mat> a(size_temp);
     for(int j = 0; j < size_temp; j++)
     {
       a(j)       = exp(z_temp.rows(j,size_temp-1)*theta*b_spline_temp.row(j).t());
@@ -363,28 +363,28 @@ double dloglik_likelihood(colvec &par,int knot,colvec &facility,colvec &delta,ma
 
 
 // [[Rcpp::export]]
-List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &theta,int number_facility=1){
+List ddloglik(int knot,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,arma::mat &theta,int number_facility=1){
   int n          = delta.n_rows;
   int p          = theta.n_rows;
-  uvec delta_1   = find(delta == 1);              // record the events
-  mat schoenfeld = zeros<mat>(n,p);               
+  arma::uvec delta_1   = find(delta == 1);              // record the events
+  arma::mat schoenfeld = zeros<arma::mat>(n,p);               
   double partial_likelihood = 0; 
-  mat GVG        = zeros<mat>(p*knot,p*knot);     
-  rowvec GR_test = zeros<rowvec>(p*knot);
-  rowvec GR      = zeros<rowvec>(p*knot);
-  rowvec S0      = zeros<rowvec>(n);
-  mat S1         = zeros<mat>(n,p);
-  mat S2         = zeros<mat>(p,p);
+  arma::mat GVG        = zeros<arma::mat>(p*knot,p*knot);     
+  arma::rowvec GR_test = zeros<arma::rowvec>(p*knot);
+  arma::rowvec GR      = zeros<arma::rowvec>(p*knot);
+  arma::rowvec S0      = zeros<arma::rowvec>(n);
+  arma::mat S1         = zeros<arma::mat>(n,p);
+  arma::mat S2         = zeros<arma::mat>(p,p);
   for(int i = 0; i < number_facility; i++){
-    uvec loc     = find(facility==i+1);
-    uvec loc1    = find(facility==i+1&&delta==1);
-    mat z_temp   = z.rows(loc);
+    arma::uvec loc     = find(facility==i+1);
+    arma::uvec loc1    = find(facility==i+1&&delta==1);
+    arma::mat z_temp   = z.rows(loc);
     int size_temp= z_temp.n_rows;
-    mat b_spline_temp = b_spline.rows(loc);
+    arma::mat b_spline_temp = b_spline.rows(loc);
     int size     = loc1.n_elem;
     int q        = 0;
-    field<mat> a(size_temp);
-    field<mat> b(size_temp);
+    field<arma::mat> a(size_temp);
+    field<arma::mat> b(size_temp);
     for(int j = 0; j < size_temp; j++)
     { b(j)       = z_temp.rows(j,size_temp-1);
       a(j)       = exp(b(j) * theta * b_spline_temp.row(j).t());
@@ -401,16 +401,16 @@ List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &
       }
     }
   }
-  schoenfeld     = repmat(delta,1,p)%(z-S1/repmat(S0.t(),1,p));
+  schoenfeld     = arma::repmat(delta,1,p)%(z-S1/arma::repmat(S0.t(),1,p));
   int number_1   = delta_1.n_elem;
-  mat gr_test    = zeros<mat>(p*knot,number_1);
+  arma::mat gr_test    = zeros<arma::mat>(p*knot,number_1);
   for(int i = 0; i < number_1; i++){
-    gr_test.col(i)     = kron(schoenfeld.row(delta_1(i)),b_spline.row(delta_1(i))).t();
+    gr_test.col(i)     = arma::kron(schoenfeld.row(delta_1(i)),b_spline.row(delta_1(i))).t();
     partial_likelihood = partial_likelihood+
       (accu(z.row(delta_1(i))*theta*(b_spline.row(delta_1(i)).t()))-log(S0(delta_1(i))));
   } 
   GR_test              = sum(gr_test,1).t();
-  mat dist             = solve(GVG,GR_test.t());
+  arma::mat dist             = arma::solve(GVG,GR_test.t());
   dist.reshape(knot,p);
   dist=dist.t();
   List result;
@@ -422,18 +422,18 @@ List ddloglik(int knot,colvec &facility,colvec &delta,mat &z,mat &b_spline,mat &
 }
 
 // [[Rcpp::export]]
-List stratify(int knot,double tol,colvec &facility,colvec &delta,mat &z,mat &b_spline,int max_iteration=5000)
+List stratify(int knot,double tol,arma::colvec &facility,arma::colvec &delta,arma::mat &z,arma::mat &b_spline,int max_iteration=5000)
 { int p                = z.n_cols;
-  mat theta            = zeros<mat>(p,knot);
-  colvec unique_facility = unique(facility);
+  arma::mat theta            = zeros<arma::mat>(p,knot);
+  arma::colvec unique_facility = unique(facility);
   int number_facility    = unique_facility.n_elem;
   List result;
   double difference      = 1;
-  mat l2;
-  mat L2;
-  rowvec theta_NR_i;
+  arma::mat l2;
+  arma::mat L2;
+  arma::rowvec theta_NR_i;
   
-  colvec partial_likelihood_all(max_iteration);
+  arma::colvec partial_likelihood_all(max_iteration);
   
   int iteration        = 1;
   int key              = 0;
@@ -441,9 +441,9 @@ List stratify(int knot,double tol,colvec &facility,colvec &delta,mat &z,mat &b_s
   { 
     result             = ddloglik(knot,facility,delta,z,b_spline,theta,number_facility);
     iteration          = iteration+1;
-    mat GVG            = result["GVG"];
-    rowvec GR_test     = result["GR_test"];
-    mat dist           = result["dist"];
+    arma::mat GVG            = result["GVG"];
+    arma::rowvec GR_test     = result["GR_test"];
+    arma::mat dist           = result["dist"];
     double risk        = result["partial_likelihood"];
     partial_likelihood_all[key] = risk;
     key                = key+1;
@@ -453,14 +453,14 @@ List stratify(int knot,double tol,colvec &facility,colvec &delta,mat &z,mat &b_s
   
   
   
-  rowvec test_constrast = zeros<rowvec>(p);
-  mat constrain         = -diff(diagmat(ones<rowvec>(knot)));
-  mat GVG               = result["GVG"];
+  arma::rowvec test_constrast = zeros<arma::rowvec>(p);
+  arma::mat constrain         = -diff(diagmat(ones<arma::rowvec>(knot)));
+  arma::mat GVG               = result["GVG"];
   double partial_likelihood = result["partial_likelihood"];
   for(int i = 0; i < p; i++){
-    rowvec theta_NR_i   = theta.row(i);
-    mat l2              = inv(GVG);
-    mat L2              = l2.rows(i*knot,(i+1)*knot-1).cols(i*knot,(i+1)*knot-1);
+    arma::rowvec theta_NR_i   = theta.row(i);
+    arma::mat l2              = arma::inv(GVG);
+    arma::mat L2              = l2.rows(i*knot,(i+1)*knot-1).cols(i*knot,(i+1)*knot-1);
     test_constrast(i)   = accu((constrain*theta_NR_i.t()).t()*inv(constrain*L2*constrain.t())
                              *(constrain*theta_NR_i.t()));
   }
