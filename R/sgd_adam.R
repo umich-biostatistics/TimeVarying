@@ -1,18 +1,21 @@
 #' SGD-Adam
 #' 
-#' @param delta  event indicator
-#' @param z Covariate matrix
-#' @param time observed event time
-#' @param knot number of basis functions for time-varing effects
-#' @param facility strata
-#' @param M_stop maximum stopping iterations
-#' @param tol the convergence threshlod
+#' @param delta  event indicator.
+#' @param z Covariate matrix.
+#' @param time observed event time.
+#' @param knot number of basis functions for time-varing effects.
+#' @param facility strata.
+#' @param M_stop maximum stopping iterations.
+#' @param tol the convergence threshlod.
 #' @param rate
 #' 
 #' @return return a list of the following values
 #' *theta : 
 #' *time :
 #' *test_SGD_all :
+#' 
+#' @examples
+#' 
 #' @export
 #' 
 #' 
@@ -159,16 +162,6 @@ SGD  <- function(delta, z, time, knot = 10 ,facility = NULL, M_stop = 10000, tol
 
 
 
-
-
-
-
-
-
-
-
-
-
 stra_sampling<-function(size, prop){
   m     <- length(size)
   mark  <- cumsum(size)
@@ -192,11 +185,6 @@ strata <- function(n,nfolds){
   } 
   return(facility)
 }
-
-
-
-
-
 
 
 
