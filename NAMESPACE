@@ -1,5 +1,6 @@
 useDynLib(TimeVarying, .registration=TRUE)
-exportPattern("^[[:alpha:]]+")
-exportPattern("^[^\\.]")
+export(NR_new)
+export(SGD)
+export(simul)
 importFrom(Rcpp, evalCpp)
 import(mvtnorm)

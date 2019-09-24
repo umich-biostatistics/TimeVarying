@@ -16,6 +16,12 @@
 #' 
 #' @examples
 #' 
+#' # the SGD
+#' # generate the simuluation data
+#' data2 <- simul(N = 2000, N_Strata = 5, p=5 )
+#' result2 <- SGD(data2$delta, data2$z, data2$time, facility = data2$facility,
+#'                knot = 10, M_stop = 10000, tol= 10^(-6),rate=0.001)
+#' 
 #' @export
 #' 
 #' 

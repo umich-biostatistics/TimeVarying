@@ -14,6 +14,8 @@
 #' *time: the death time
 #' 
 #' @examples
+#' # generate the simuluation data
+#' data2 <- simul(N = 2000, N_Strata = 5, p=5 )
 #' 
 #' @export
 #' 
