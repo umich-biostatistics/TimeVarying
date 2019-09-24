@@ -1,3 +1,5 @@
 useDynLib(TimeVarying, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
+exportPattern("^[^\\.]")
 importFrom(Rcpp, evalCpp)
+import(mvtnorm)

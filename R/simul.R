@@ -1,18 +1,22 @@
-#' This simulation function is used to simulate data
+
+#' This simulation function is used to simulate data for testing 
+#' the functions in this package.
 #' 
-#' @param N the sample size for each strata
-#' @param N_Strata number of stratas
-#' @param p number of parameters
-#' @param p_true number of true parameters
+#' @param N the sample size for each strata.
+#' @param N_Strata number of stratum.
+#' @param p number of parameters.
+#' @param p_true number of true parameters.
 #' 
 #' @return return a list of the following values
 #' *delta :  event indicator
 #' *z: Covariate matrix
 #' *facility: 
 #' *time: the death time
+#' 
+#' @examples
+#' 
 #' @export
-
-
+#' 
 
 simul <- function(N = 1000, N_Strata = 10, p=5 ){
   

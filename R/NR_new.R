@@ -1,18 +1,21 @@
 #' Netwon Raphson
 #' 
-#' @param delta  event indicator
-#' @param z Covariate matrix
-#' @param time observed event time
-#' @param knot number of basis functions for time-varing effects
-#' @param facility strata
-#' @param M_stop maximum stopping iterations
-#' @param tol the convergence threshlod
+#' @param delta  event indicator.
+#' @param z Covariate matrix.
+#' @param time observed event time.
+#' @param knot number of basis functions for time-varing effects.
+#' @param facility strata.
+#' @param M_stop maximum stopping iterations.
+#' @param tol the convergence threshlod.
 #' @param rate
 #' 
 #' @return return a list of the following values
 #' *theta : 
 #' *test_SGD_all :
 #' *b_spline :
+#' 
+#' @examples
+#' 
 #' @export
 #' 
 #' 
