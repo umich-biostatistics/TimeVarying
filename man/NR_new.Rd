@@ -33,14 +33,22 @@ NR_new(
 \item{rate}{}
 }
 \value{
-return a list of the following values
-*theta : 
-*test_SGD_all :
-*b_spline :
+return a list of the following values:
+\itemize{
+  \item theta:
+  \item test_SGD_all:
+  \item b_spline:
+}
 }
 \description{
 Netwon Raphson
 }
 \examples{
+
+# the SGD
+# generate the simuluation data
+data2 <- simul(N = 2000, N_Strata = 5, p=5 )
+result2 <- SGD(data2$delta, data2$z, data2$time, facility = data2$facility,
+               knot = 10, M_stop = 10000, tol= 10^(-6),rate=0.001)
 
 }

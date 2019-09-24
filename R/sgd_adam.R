@@ -10,10 +10,13 @@
 #' @param tol the convergence threshlod.
 #' @param rate
 #' 
-#' @return return a list of the following values
-#' *theta : 
-#' *time :
-#' *test_SGD_all :
+#' 
+#' @return return a list of the following values:
+#' \itemize{
+#'   \item theta:
+#'   \item time:
+#'   \item test_SGD_all:
+#' }
 #' 
 #' @examples
 #' # the SGD

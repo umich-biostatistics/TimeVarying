@@ -1,4 +1,6 @@
 
+#' Simulate Data
+#' 
 #' This simulation function is used to simulate data for testing 
 #' the functions in this package.
 #' 
@@ -7,11 +9,14 @@
 #' @param p number of parameters.
 #' @param p_true number of true parameters.
 #' 
-#' @return return a list of the following values
-#' *delta :  event indicator
-#' *z: Covariate matrix
-#' *facility: 
-#' *time: the death time
+#' @return return a list of the following values:
+#' \itemize{
+#'   \item delta:  event indicator
+#'   \item z: Covariate matrix
+#'   \item facility:
+#'   \item time: the death time
+#' }
+#' 
 #' 
 #' @examples
 #' # generate the simuluation data

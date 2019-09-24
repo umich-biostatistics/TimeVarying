@@ -9,10 +9,13 @@
 #' @param tol the convergence threshlod.
 #' @param rate
 #' 
-#' @return return a list of the following values
-#' *theta : 
-#' *test_SGD_all :
-#' *b_spline :
+#' 
+#' @return return a list of the following values:
+#' \itemize{
+#'   \item theta:
+#'   \item test_SGD_all:
+#'   \item b_spline:
+#' }
 #' 
 #' @examples
 #' 
