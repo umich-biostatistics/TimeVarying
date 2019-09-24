@@ -6,75 +6,6 @@
 
 using namespace Rcpp;
 
-// dloglik_likelihood_stratify
-double dloglik_likelihood_stratify(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta);
-RcppExport SEXP _TimeVarying_dloglik_likelihood_stratify(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(dloglik_likelihood_stratify(knot, facility, delta, z, b_spline, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ddloglik
-List ddloglik(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta, int number_facility);
-RcppExport SEXP _TimeVarying_ddloglik(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP, SEXP number_facilitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< int >::type number_facility(number_facilitySEXP);
-    rcpp_result_gen = Rcpp::wrap(ddloglik(knot, facility, delta, z, b_spline, theta, number_facility));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dloglik_likelihood_gradient
-double dloglik_likelihood_gradient(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta);
-RcppExport SEXP _TimeVarying_dloglik_likelihood_gradient(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(dloglik_likelihood_gradient(knot, facility, delta, z, b_spline, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// NRloop
-List NRloop(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta, int M_stop, int number_facility, double rate, double tol);
-RcppExport SEXP _TimeVarying_NRloop(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP, SEXP M_stopSEXP, SEXP number_facilitySEXP, SEXP rateSEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< int >::type M_stop(M_stopSEXP);
-    Rcpp::traits::input_parameter< int >::type number_facility(number_facilitySEXP);
-    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(NRloop(knot, facility, delta, z, b_spline, theta, M_stop, number_facility, rate, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sign_num
 int sign_num(double x);
 RcppExport SEXP _TimeVarying_sign_num(SEXP xSEXP) {
@@ -83,57 +14,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(sign_num(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ddloglik_stratify
-List ddloglik_stratify(int knot, arma::colvec& facility, arma::mat& z, arma::colvec& delta, arma::mat& b_spline, arma::mat& theta, int number_facility);
-RcppExport SEXP _TimeVarying_ddloglik_stratify(SEXP knotSEXP, SEXP facilitySEXP, SEXP zSEXP, SEXP deltaSEXP, SEXP b_splineSEXP, SEXP thetaSEXP, SEXP number_facilitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< int >::type number_facility(number_facilitySEXP);
-    rcpp_result_gen = Rcpp::wrap(ddloglik_stratify(knot, facility, z, delta, b_spline, theta, number_facility));
-    return rcpp_result_gen;
-END_RCPP
-}
-// GDboost_stratify
-List GDboost_stratify(int knot, double rate, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat theta);
-RcppExport SEXP _TimeVarying_GDboost_stratify(SEXP knotSEXP, SEXP rateSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(GDboost_stratify(knot, rate, facility, delta, z, b_spline, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// GDboost_stratify_no_GD2
-List GDboost_stratify_no_GD2(int knot, double rate, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat theta);
-RcppExport SEXP _TimeVarying_GDboost_stratify_no_GD2(SEXP knotSEXP, SEXP rateSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(GDboost_stratify_no_GD2(knot, rate, facility, delta, z, b_spline, theta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -203,22 +83,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dloglik_likelihood
-double dloglik_likelihood(arma::colvec& par, int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline);
-RcppExport SEXP _TimeVarying_dloglik_likelihood(SEXP parSEXP, SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::colvec& >::type par(parSEXP);
-    Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    rcpp_result_gen = Rcpp::wrap(dloglik_likelihood(par, knot, facility, delta, z, b_spline));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ddloglik
 List ddloglik(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta, int number_facility);
 RcppExport SEXP _TimeVarying_ddloglik(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP, SEXP number_facilitySEXP) {
@@ -236,40 +100,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// stratify
-List stratify(int knot, double tol, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, int max_iteration);
-RcppExport SEXP _TimeVarying_stratify(SEXP knotSEXP, SEXP tolSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP max_iterationSEXP) {
+// NRloop
+List NRloop(int knot, arma::colvec& facility, arma::colvec& delta, arma::mat& z, arma::mat& b_spline, arma::mat& theta, int M_stop, int number_facility, double rate, double tol);
+RcppExport SEXP _TimeVarying_NRloop(SEXP knotSEXP, SEXP facilitySEXP, SEXP deltaSEXP, SEXP zSEXP, SEXP b_splineSEXP, SEXP thetaSEXP, SEXP M_stopSEXP, SEXP number_facilitySEXP, SEXP rateSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type knot(knotSEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
     Rcpp::traits::input_parameter< arma::colvec& >::type facility(facilitySEXP);
     Rcpp::traits::input_parameter< arma::colvec& >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type z(zSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type b_spline(b_splineSEXP);
-    Rcpp::traits::input_parameter< int >::type max_iteration(max_iterationSEXP);
-    rcpp_result_gen = Rcpp::wrap(stratify(knot, tol, facility, delta, z, b_spline, max_iteration));
+    Rcpp::traits::input_parameter< arma::mat& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< int >::type M_stop(M_stopSEXP);
+    Rcpp::traits::input_parameter< int >::type number_facility(number_facilitySEXP);
+    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(NRloop(knot, facility, delta, z, b_spline, theta, M_stop, number_facility, rate, tol));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_TimeVarying_dloglik_likelihood_stratify", (DL_FUNC) &_TimeVarying_dloglik_likelihood_stratify, 6},
-    {"_TimeVarying_ddloglik", (DL_FUNC) &_TimeVarying_ddloglik, 7},
-    {"_TimeVarying_dloglik_likelihood_gradient", (DL_FUNC) &_TimeVarying_dloglik_likelihood_gradient, 6},
-    {"_TimeVarying_NRloop", (DL_FUNC) &_TimeVarying_NRloop, 10},
     {"_TimeVarying_sign_num", (DL_FUNC) &_TimeVarying_sign_num, 1},
-    {"_TimeVarying_ddloglik_stratify", (DL_FUNC) &_TimeVarying_ddloglik_stratify, 7},
-    {"_TimeVarying_GDboost_stratify", (DL_FUNC) &_TimeVarying_GDboost_stratify, 7},
-    {"_TimeVarying_GDboost_stratify_no_GD2", (DL_FUNC) &_TimeVarying_GDboost_stratify_no_GD2, 7},
     {"_TimeVarying_dloglik_likelihood_stratify", (DL_FUNC) &_TimeVarying_dloglik_likelihood_stratify, 6},
     {"_TimeVarying_ddloglik_gradient", (DL_FUNC) &_TimeVarying_ddloglik_gradient, 7},
     {"_TimeVarying_GDboost_gradient", (DL_FUNC) &_TimeVarying_GDboost_gradient, 7},
     {"_TimeVarying_dloglik_likelihood_gradient", (DL_FUNC) &_TimeVarying_dloglik_likelihood_gradient, 6},
-    {"_TimeVarying_dloglik_likelihood", (DL_FUNC) &_TimeVarying_dloglik_likelihood, 6},
     {"_TimeVarying_ddloglik", (DL_FUNC) &_TimeVarying_ddloglik, 7},
-    {"_TimeVarying_stratify", (DL_FUNC) &_TimeVarying_stratify, 7},
+    {"_TimeVarying_NRloop", (DL_FUNC) &_TimeVarying_NRloop, 10},
     {NULL, NULL, 0}
 };
 
