@@ -6,7 +6,7 @@ Package description:
 
 ```
 library(devtools)
-install_github(umich-biostatistcs/TimeVarying)
+install_github("umich-biostatistics/TimeVarying")
 
 library(TimeVarying)
 ```
